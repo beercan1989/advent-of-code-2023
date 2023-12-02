@@ -51,15 +51,13 @@ fun partTwo() {
     )
 
     val exampleAnswer = example
-        .replaceDigitWordsWithDigits()
-        .extractFirstAndLastDigit()
+        .extractFirstAndLastDigitIncludingWords()
         .sum()
 
     println("Example answer: $exampleAnswer")
 
     val calibrationAnswer = getCalibrationDocument()
-        .replaceDigitWordsWithDigits()
-        .extractFirstAndLastDigit()
+        .extractFirstAndLastDigitIncludingWords()
         .sum()
 
     println("Calibration answer: $calibrationAnswer")
@@ -75,21 +73,49 @@ fun List<String>.extractFirstAndLastDigit(): List<Int> = map { line ->
     "$first$last".toInt()
 }
 
-fun  List<String>.replaceDigitWordsWithDigits(): List<String> = map { line ->
-    line.fold("") { accumulated, current ->
-        if(current.isDigit()) {
-            accumulated + current
-        } else {
-            (accumulated + current)
-                .replace("one", "1")
-                .replace("two", "2")
-                .replace("three", "3")
-                .replace("four", "4")
-                .replace("five", "5")
-                .replace("six", "6")
-                .replace("seven", "7")
-                .replace("eight", "8")
-                .replace("nine", "9")
+fun List<String>.extractFirstAndLastDigitIncludingWords(): List<Int> = map { line ->
+    val first = line.firstDigit()
+    val last = line.lastDigit()
+    "$first$last".toInt()
+}
+
+fun String.firstDigit(): Int {
+    fold("") { accumulated: String, current: Char ->
+        if(current.isDigit()) return current.digitToInt()
+        val updated = accumulated + current
+        when {
+            updated.contains("one") -> return 1
+            updated.contains("two") -> return 2
+            updated.contains("three") -> return 3
+            updated.contains("four") -> return 4
+            updated.contains("five") -> return 5
+            updated.contains("six") -> return 6
+            updated.contains("seven") -> return 7
+            updated.contains("eight") -> return 8
+            updated.contains("nine") -> return 9
+            else -> updated
         }
     }
+    throw IndexOutOfBoundsException("No digit found")
+}
+
+fun String.lastDigit(): Int {
+    foldRight("") { current: Char, accumulated: String ->
+        if(current.isDigit()) return current.digitToInt()
+        val updated = accumulated + current
+        val reversed = updated.reversed()
+        when {
+            reversed.contains("one") -> return 1
+            reversed.contains("two") -> return 2
+            reversed.contains("three") -> return 3
+            reversed.contains("four") -> return 4
+            reversed.contains("five") -> return 5
+            reversed.contains("six") -> return 6
+            reversed.contains("seven") -> return 7
+            reversed.contains("eight") -> return 8
+            reversed.contains("nine") -> return 9
+            else -> updated
+        }
+    }
+    throw IndexOutOfBoundsException("No digit found")
 }
