@@ -1,15 +1,12 @@
 package uk.co.baconi
 
-import java.io.File
-
-
 // https://adventofcode.com/2023/day/1
 fun main() {
-    partOne()
-    partTwo()
+    dayOnePartOne()
+    dayOnePartTwo()
 }
 
-fun partOne() {
+fun dayOnePartOne() {
 
     println()
     println("--- Part One --- ")
@@ -35,7 +32,7 @@ fun partOne() {
 }
 
 
-fun partTwo() {
+fun dayOnePartTwo() {
 
     println()
     println("--- Part Two --- ")
@@ -65,9 +62,7 @@ fun partTwo() {
     println("Calibration answer: $calibrationAnswer")
 }
 
-fun getCalibrationDocument(): List<String> = checkNotNull(
-    AdventOfCode2023::class.java.getResource("/day_01.txt")?.toURI()?.let(::File)?.readLines()
-)
+fun getCalibrationDocument(): List<String> = AdventOfCode2023.readResourceByLines("/day_01.txt")
 
 fun List<String>.extractFirstAndLastDigit(): List<Int> = map { line ->
     val first = line.first(Char::isDigit)
@@ -77,7 +72,7 @@ fun List<String>.extractFirstAndLastDigit(): List<Int> = map { line ->
 
 fun List<String>.replaceDigitWordsWithDigits(): List<String> = map { line ->
     line.fold("") { accumulated, current ->
-        if(current.isDigit()) {
+        if (current.isDigit()) {
             accumulated + current
         } else {
             (accumulated + current)
